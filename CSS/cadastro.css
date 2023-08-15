@@ -1,0 +1,36 @@
+.image-bg{
+    background-image: url("../assets/img/book.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right;
+    border-radius: 0 30px;
+}
+.wdth-box-title{
+    width: 80%;
+    background: #726670;
+    color: #FFF;
+    padding: 10px;
+    border-radius: 0 30px;
+    cursor: pointer;
+    transition: 0.90s;
+}
+.wdth-box-title:hover{
+    opacity: 30%;
+    transition: 0.90s;
+    color: #000;
+    
+}
+
+.is-wdt{
+    width: 30%;
+}
+
+.line{
+    width: 20%;
+    height: 1px;
+    background-color: #DDD;
+}
+
+.loginDiv .content{
+    height: 595px;
+}
