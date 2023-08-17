@@ -38,15 +38,27 @@ $(document).ready(function() {
 
   // clicou no botão da navbar para fazer login.
 function entrar() {
+    console.log('entrar.');
     // Pega a URI atual
     var currentUri = window.location.pathname;
-  
+    console.log("current: " + currentUri);
+    console.log("search: " + window.location.search);
+    
     // Verifica se a URI é a raiz do site
-    if (currentUri === '/') {
+    if (currentUri === '/' ) {
       // Esconde a div de cadastro
       $(".cadastroDiv").hide();
-      // Mostra a div de login
-      $(".loginDiv").show();
+      
+      // Verifica se há um erro de login
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('loginError')) {
+        // Mostra a div de login e executa a função 'entrar' para exibir a mensagem de erro
+        $(".loginDiv").show();
+        entrar();
+      } else {
+        // Mostra a div de login normalmente
+        $(".loginDiv").show();
+      }
     } else {
       // Redireciona o usuário para a raiz
       localStorage.setItem('loginState', 'login');
@@ -55,52 +67,52 @@ function entrar() {
 }
 
 // Enviou o formulário para fazer login.
-$(document).ready(function() {
+// $(document).ready(function() {
 
-  $('#login-link').click(function(e) {
-    e.preventDefault(); // Impedir o comportamento padrão do link
-    $('#login-form').submit(); // Simular o envio do formulário de login
-  });
+//   $('#login-link').click(function(e) {
+//     e.preventDefault(); // Impedir o comportamento padrão do link
+//     $('#login-form').submit(); // Simular o envio do formulário de login
+//   });
 
-  $('#login-form').submit(function(e) {
+//   $('#login-form').submit(function(e) {
 
-    e.preventDefault();
+//     e.preventDefault();
 
-    var email_ = $('#email').val();
-    var password_ = $('#password').val();
+//     var email_ = $('#email').val();
+//     var password_ = $('#password').val();
 
-    var requestData = {
-      email: email_,
-      password: password_
-    };
+//     var requestData = {
+//       email: email_,
+//       password: password_
+//     };
 
-    // alert('Email inserido: ' +  email + ' - senha: '+ password);
-    console.log('Email inserido: '+ email_, ' - senha: ' + password_);
-    $.ajax({
-      type: 'POST',
-      url: 'http://api-biblioteca-php.com:8080/login',
-      data: JSON.stringify(requestData), // Enviar os dados como JSON
-      contentType: 'application/json', // Especificar o tipo de conteúdo como JSON
-      dataType: 'json',
-      success: function(response) {
-          console.log('Response: ', response); // Use uma vírgula para separar o texto do objeto
-          if (response === 'Logado com sucesso.') {
-              $('#login-message').text('Login bem-sucedido.');
-              window.location.href = 'http://biblioteca-php.com:8000/home';
+//     // alert('Email inserido: ' +  email + ' - senha: '+ password);
+//     console.log('Email inserido: '+ email_, ' - senha: ' + password_);
+//     $.ajax({
+//       type: 'POST',
+//       url: 'http://api-biblioteca-php.com:8080/login',
+//       data: JSON.stringify(requestData), // Enviar os dados como JSON
+//       contentType: 'application/json', // Especificar o tipo de conteúdo como JSON
+//       dataType: 'json',
+//       success: function(response) {
+//           console.log('Response: ', response); // Use uma vírgula para separar o texto do objeto
+//           if (response === 'Logado com sucesso.') {
+//               $('#login-message').text('Login bem-sucedido.');
+//               window.location.href = 'http://biblioteca-php.com:8000/home';
 
-          } else {
-              $('#login-message').text('Credenciais inválidas.');
-          }
-      },
-      error: function(jqXHR) {
-          if (jqXHR.status === 400) {
-            var errorResponse = jqXHR.responseJSON; // Use responseJSON para acessar o JSON de erro
-            console.log('Erro 400 Bad Request:', errorResponse);
-            $('#login-message').text('Erro 400 Bad Request: ' + errorResponse.error);
-        } else {
-            $('#login-message').text('Erro ao realizar o login.');
-        }
-      }
-    });
-  });
-});
+//           } else {
+//               $('#login-message').text('Credenciais inválidas.');
+//           }
+//       },
+//       error: function(jqXHR) {
+//           if (jqXHR.status === 400) {
+//             var errorResponse = jqXHR.responseJSON; // Use responseJSON para acessar o JSON de erro
+//             console.log('Erro 400 Bad Request:', errorResponse);
+//             $('#login-message').text('Erro 400 Bad Request: ' + errorResponse.error);
+//         } else {
+//             $('#login-message').text('Erro ao realizar o login.');
+//         }
+//       }
+//     });
+//   });
+// });

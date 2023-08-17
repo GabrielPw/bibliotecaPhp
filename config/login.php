@@ -1,43 +1,39 @@
 <?php
+    require_once 'config.php';
+    require_once 'model/Usuario.php';
     // Autenticação
     if($_SERVER['REQUEST_METHOD'] == 'POST' AND $_SERVER['REQUEST_URI'] == '/login'){
 
-        $token = '';
         define ('SECRET_KEY', 'SENHA_SUPER_SECRETA@!123', true);
 
-        // Obter os dados JSON do corpo da solicitação
-        $jsonData = file_get_contents('php://input');
-        $data = json_decode($jsonData, true);
+        // Obter os dados do formulário
+        $username = $_POST['email'];
+        $password = $_POST['password'];
 
-        if(isset($data['email']) && isset($data['password'])){
-            //var_dump("Está no IF: Email: " . $_POST['email'] . "- senha: " . $_POST['password']);
-            $username = $data['email'];
-            $password = $data['password'];
+        $user = new Usuario($db);
+        $isUserFound = $user->getByEmailAndPassword($username, $password);
 
-            $user = new Usuario($db);
-            $isUserFound = $user->getByEmailAndPassword($username, $password);
-        
-            if($isUserFound != null){
+        if($isUserFound != null){
+            $rememberToken = generateRandomToken();
+            $user->storeOrUpdateRememberToken($isUserFound['id'], $rememberToken);
 
-                $token = 'Logado com sucesso.';
-                $rememberToken = generateRandomToken();
-                $user->storeOrUpdateRememberToken($isUserFound['id'], $rememberToken);
+            $cookieData = $isUserFound['id'] . ':' . $rememberToken;
+            $mac = hash_hmac('sha256', $cookieData, SECRET_KEY);
+            $cookieData .= ':' . $mac;
 
-                $cookieData = $isUserFound['id'] . ':' . $rememberToken;
-                $mac = hash_hmac('sha256', $cookieData, SECRET_KEY);
-                $cookieData .= ':' . $mac;
+            setcookie('rememberme', $cookieData, time() + (14 * 24 * 60 * 60), '/'); // 2 semanas
+            // Redirecionar para a rota /home
+            header('Location: /home');
+            exit();
+        }else {
 
-                setcookie('rememberme', $cookieData, time() + (14 * 24 * 60 * 60), '/', '.biblioteca-php.com:8000/', false); // 2 semanas
-            }else {
-                header('HTTP/1.1 404 Not Found');
-                $token = 'Credenciais inválidas.';
-            }
-            header('Content-Type: application/json');
-            echo json_encode($token, JSON_UNESCAPED_UNICODE);
-        } else {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'Campos de email e senha são obrigatórios.']);
+            // Credenciais inválidas
+            header('Location: /?loginError');
+            exit();
         }
+    } else {
+        header('HTTP/1.1 400 Bad Request');
+        echo json_encode(['error' => 'Campos de email e senha são obrigatórios.']);
     }
 
     function generateRandomToken($lenght = 32){

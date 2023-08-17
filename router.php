@@ -1,20 +1,26 @@
 <?php
-
+    require 'config/config.php';
+    require 'model/Usuario.php';
     $request = $_SERVER['REQUEST_URI'];
 
-    switch ($request) {
+    // Verifica se a URL contém parâmetros
+    if (strpos($request, '?') !== false) {
+        list($path, $query) = explode('?', $request, 2);
+        parse_str($query, $params);
+    } else {
+        $path = $request;
+        $params = array();
+    }
 
+    switch ($path) {
 
         case '/':
-            require 'view/index.php';
+            $user = new Usuario($db);
+            require $user->checkIfCookieIsValid()? 'view/home.php': 'view/index.php';
             break;
 
         case '/home':
             require 'view/home.php';
-            break;
-
-        case '/views/authors':
-            require __DIR__ . 'view/authors.php';
             break;
 
         case '/about':
@@ -23,9 +29,18 @@
         case '/login':
             require 'config/login.php';
             break;
+        case '/logout':
+            doLogout();
+            break;
         default:
             http_response_code(404);
             require 'view/404.php';
             break;
+    }
+
+    function doLogout(){
+        setcookie('rememberme','', time() - 3600, '/');
+        header('Location: /');
+        exit();
     }
 ?>

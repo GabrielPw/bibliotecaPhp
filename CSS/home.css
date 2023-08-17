@@ -2,3 +2,44 @@
 
     height: 80px;
 }
+
+.bg-custom{
+    background: orange;
+    width: fit-content;
+    padding-right: 15px;
+    padding-left: 10px;
+    transform: skew(-20deg); /* Rotacionar o elemento */
+}
+
+.card-container {
+    position: relative;
+    /* Outras propriedades de estilo da sua div aqui */
+}
+
+.card-content {
+    position: relative; /* Adicione position: relative para que a camada se ajuste ao conteúdo do card */
+}
+
+.card-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(60, 39, 94, 0.151); /* Cor preta com transparência */
+    opacity: 0; /* Inicialmente invisível */
+    transition: opacity 0.3s ease; /* Transição suave */
+    border-radius: 10px;
+    border: 2px solid rgba(231, 162, 34, 0.616);
+    pointer-events: none; /* Evita que a camada bloqueie interações com o conteúdo abaixo */
+    z-index: 1; /* Coloca a camada atrás do conteúdo do card */
+}
+
+.card-container:hover::before {
+    opacity: 1; /* Torna a camada visível quando o hover é ativado */
+}
+
+.card-container:hover{
+    cursor: pointer;
+}

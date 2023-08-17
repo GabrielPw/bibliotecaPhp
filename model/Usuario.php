@@ -104,6 +104,45 @@
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             return $user;
         }
+
+        function getUserById($id) {
+            if (!$this->conn) {
+                echo "Erro na conexão com o banco de dados.";
+                return null;
+            }
+            
+            $query = 'SELECT * FROM usuarios WHERE id = :id';
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            
+            $stmt->execute();
+            
+            if ($stmt->error) {
+                echo "Erro na consulta SQL: " . $stmt->error;
+                return null;
+            }
+        
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
+        }
+
+        function checkIfCookieIsValid(){
+            define ('SECRET_KEY', 'SENHA_SUPER_SECRETA@!123', true);
+            if (isset($_COOKIE['rememberme'])) {
+                list($userId, $token, $mac) = explode(':', $_COOKIE['rememberme']);
+                $expectedMac = hash_hmac('sha256', $userId . ':' . $token, SECRET_KEY);
+                
+                // verifica validade do token.
+                if (hash_equals($expectedMac, $mac)) {
+                    $storedToken = $this->getRememberToken($userId);
+                    if (hash_equals($storedToken, $token)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
     }
 
 ?>

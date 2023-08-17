@@ -20,6 +20,7 @@
                 <h1 class="subtitle is-size-2 mt-6">Página inacessível ou inexistente.</h1>
             </div>
         </div>
+        <a href='/'>< Voltar para Home</a>
     </div>
 </body>
 </html>

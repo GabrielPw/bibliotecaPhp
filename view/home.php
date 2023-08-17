@@ -13,21 +13,59 @@
 
 <body>
 
-    <?php
-    include 'menu-header.php';
-    include 'carrosel.php';
-    ?>
+    
 
-    <div class="container">
-    <h1 class="title mt-6 is-size-1">Biblioteca de livros <i class="fa-solid fa-book"></i></h1>
-    <h2 class="subtitle is-size-2">Sua biblioteca em PHP</h2>
+<?php
+    require_once 'config/config.php';
+    require_once 'model/Usuario.php';
+    include 'model/Livro.php';
+    define ('SECRET_KEY', 'SENHA_SUPER_SECRETA@!123', true);
 
- <?php
+    $user = new Usuario($db);
 
-    $api_url = 'http://api-biblioteca-php.com:8080';
-    $response = file_get_contents($api_url . '/books/getAll');
-    $livros = json_decode($response);
+    // Verifica se cookie rememberme existe.
+    if (isset($_COOKIE['rememberme'])) {
+        list($userId, $token, $mac) = explode(':', $_COOKIE['rememberme']);
+        $expectedMac = hash_hmac('sha256', $userId . ':' . $token, SECRET_KEY);
+        
+        // verifica validade do token.
+        if (hash_equals($expectedMac, $mac)) {
+            $storedToken = $user->getRememberToken($userId);
+            if (hash_equals($storedToken, $token)) {
+                
+                // token está válido.
+                $api_url = 'http://api-biblioteca-php.com:8080';
+                $response = file_get_contents($api_url . '/books/getAll');
+                $livros = json_decode($response);
 
+                include 'menu-header.php';
+                include 'carrosel.php';
+    
+                ?>
+                <div class="container">
+                <h1 class="title mt-6 is-size-1">Biblioteca de livros <i class="fa-solid fa-book"></i></h1>
+                <h2 class="subtitle is-size-2 bg-custom">Nosso Acervo</h2>
+
+                <?php
+                include 'livroSearchFields.php';
+            } else {
+                echo 'Token de cookie inválido.';
+                header('Location: /');
+                exit();
+            }
+        } else {
+            echo 'MAC de cookie inválido.';
+            header('Location: /');
+            exit();
+        }
+    }else{
+        // Cookie com token não encontrado.
+        echo 'Cookie com token não encontrado.';
+        ?><script>window.location.href='/';</script><?php
+        exit();
+    }
+    
+    
     $cols = 4;
     $total_livros = count($livros);
     $rows = ceil($total_livros / $cols);
@@ -40,7 +78,7 @@
                 $livro = $livros[$livro_index];
 ?>
                 <!-- Seu código HTML dos cards aqui -->
-                <div class="column is-3">
+                <div class="column is-3 card-container">
                     <!-- Conteúdo do card -->
                     <div class="card">
                         <div class="card-image">
@@ -52,7 +90,7 @@
                             <div class="media">
                                 <div class="media-left">
                                     <figure class="image is-48x48">
-                                        <img src="<?php echo "$livro->autor_imagem_perfil"; ?>" alt="Placeholder image">
+                                        <img src="<?php echo "$livro->url_foto_autor"; ?>" alt="Placeholder image">
                                     </figure>
                                 </div>
                                 <div class="media-content">
