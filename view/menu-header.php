@@ -24,6 +24,7 @@
       </div>
 
       <?php
+      
       $user = new Usuario($db);
       if ($user->checkIfCookieIsValid()) {
         list($userId, $token, $mac) = explode(':', $_COOKIE['rememberme']);

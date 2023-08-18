@@ -26,6 +26,9 @@
         case '/about':
             require __DIR__ . 'view/aboutus.php';
             break;
+        case '/livro-detalhe':
+            require 'view/detalheLivro.php';
+            break;
         case '/login':
             require 'config/login.php';
             break;

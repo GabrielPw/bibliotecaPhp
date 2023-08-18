@@ -13,26 +13,17 @@
 
 <body>
 
-    
-
 <?php
     require_once 'config/config.php';
     require_once 'model/Usuario.php';
-    include 'model/Livro.php';
-    define ('SECRET_KEY', 'SENHA_SUPER_SECRETA@!123', true);
+    require_once 'config/TokenVerifier.php';
 
     $user = new Usuario($db);
 
     // Verifica se cookie rememberme existe.
     if (isset($_COOKIE['rememberme'])) {
-        list($userId, $token, $mac) = explode(':', $_COOKIE['rememberme']);
-        $expectedMac = hash_hmac('sha256', $userId . ':' . $token, SECRET_KEY);
-        
-        // verifica validade do token.
-        if (hash_equals($expectedMac, $mac)) {
-            $storedToken = $user->getRememberToken($userId);
-            if (hash_equals($storedToken, $token)) {
-                
+            $token = $_COOKIE['rememberme'];
+            if(TokenVerifier::verifyRememberToken($db, $token)){
                 // token está válido.
                 $api_url = 'http://api-biblioteca-php.com:8080';
                 $response = file_get_contents($api_url . '/books/getAll');
@@ -48,23 +39,17 @@
 
                 <?php
                 include 'livroSearchFields.php';
-            } else {
+            }else {
                 echo 'Token de cookie inválido.';
                 header('Location: /');
                 exit();
             }
-        } else {
-            echo 'MAC de cookie inválido.';
-            header('Location: /');
-            exit();
-        }
     }else{
         // Cookie com token não encontrado.
         echo 'Cookie com token não encontrado.';
         ?><script>window.location.href='/';</script><?php
         exit();
     }
-    
     
     $cols = 4;
     $total_livros = count($livros);
@@ -78,7 +63,7 @@
                 $livro = $livros[$livro_index];
 ?>
                 <!-- Seu código HTML dos cards aqui -->
-                <div class="column is-3 card-container">
+                <div class="column is-3 card-container" onclick="window.location = '/livro-detalhe?book=<?php echo $livro->id; ?>'">
                     <!-- Conteúdo do card -->
                     <div class="card">
                         <div class="card-image">
