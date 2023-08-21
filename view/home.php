@@ -25,9 +25,17 @@
             $token = $_COOKIE['rememberme'];
             if(TokenVerifier::verifyRememberToken($db, $token)){
                 // token está válido.
-                $api_url = 'http://api-biblioteca-php.com:8080';
-                $response = file_get_contents($api_url . '/books/getAll');
-                $livros = json_decode($response);
+                if (isset($_GET['query'])) {
+                    $searchQuery = $_GET['query'];
+                    $api_url = 'http://api-biblioteca-php.com:8080';
+                    $response = file_get_contents($api_url . '/books?query=' . urlencode($searchQuery));
+                    $livros = json_decode($response);
+                }else{
+                    $api_url = 'http://api-biblioteca-php.com:8080';
+                    $response = file_get_contents($api_url . '/books/getAll');
+                    $livros = json_decode($response);
+                }
+                
 
                 include 'menu-header.php';
                 include 'carrosel.php';
@@ -97,15 +105,14 @@
                 $livro_index++;
             } else {
                 // Adicionar coluna em branco para preencher o espaço
+                
                 echo '<div class="column is-3"></div>';
             }
         }   
         echo '</div>';
     }
-?>
 
-
-        
+?>  
     </div>
     <script src="biblioteca_php/script.js"></script>
 

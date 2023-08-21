@@ -1,9 +1,9 @@
-<form class="content p-2">
+<form class="content p-2" method="POST" action="/cadastrar">
     <!---Nome-->
     <div class="field">
         <label class="label">Nome</label>
         <div class="control has-icons-left">
-            <input class="input" type="text" placeholder="Nome">
+            <input class="input" name="nome" type="text" placeholder="Nome">
             <span class="icon is-small is-left">
                 <i class="fa-solid fa-circle-user"></i>
             </span>
@@ -16,7 +16,7 @@
     <div class="field">
         <label class="label">Email</label>
         <div class="control has-icons-left">
-            <input class="input " type="text" placeholder="Email">
+            <input class="input" name="email" type="text" placeholder="Email">
             <span class="icon is-small is-left">
                 <i class="fa-solid fa-envelope"></i>
             </span>
@@ -28,7 +28,7 @@
     <div class="field">
         <label class="label">Endereço</label>
         <div class="control has-icons-left">
-            <input class="input " type="text" placeholder="Endereço">
+            <input class="input" name="endereco" type="text" placeholder="Endereço">
             <span class="icon is-small is-left">
                 <i class="fa-solid fa-location-dot"></i>
             </span>
@@ -40,7 +40,7 @@
     <div class="field">
         <label class="label">Telefone</label>
         <div class="control has-icons-left">
-            <input class="input " type="text" placeholder="Telefone">
+            <input class="input" name="telefone" type="text" placeholder="Telefone">
             <span class="icon is-small is-left">
                 <i class="fa-solid fa-phone"></i>
             </span>
@@ -52,7 +52,7 @@
     <div class="field">
         <label class="label">Senha</label>
         <p class="control has-icons-left">
-            <input class="input" type="password" placeholder="Senha">
+            <input class="input" name="senha" type="password" placeholder="Senha">
             <span class="icon is-small is-left">
                 <i class="fas fa-lock"></i>
             </span>
@@ -72,7 +72,7 @@
     </div>
 
     <p class="control mt-5 is-flex is-justify-content-center ">
-        <a class="button is-link is-outlined is-medium is-fullwidth" title="Cadastrar" href="/home">Cadastrar</a>
+        <button class="button is-link is-outlined is-medium is-fullwidth" title="Cadastrar" type="submit">Cadastrar</button>
     </p>
 
     </div>

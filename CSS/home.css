@@ -1,10 +1,15 @@
+:root {
+
+    --amarelo-background: #ffb703;
+}
+
 .media{
 
     height: 80px;
 }
 
 .bg-custom{
-    background: orange;
+    background: var(--amarelo-background);
     width: fit-content;
     padding-right: 15px;
     padding-left: 10px;

@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-confirm@3.3.4/dist/jquery-confirm.min.css">
+
 <header id="header_legal_CRM" class="">
   <!---navbar-->
   <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -19,12 +21,11 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-end">
         <a class="navbar-item"> Quem Somos </a>
-
         <a class="navbar-item"> Nossos Pressos </a>
       </div>
 
       <?php
-      
+
       $user = new Usuario($db);
       if ($user->checkIfCookieIsValid()) {
         list($userId, $token, $mac) = explode(':', $_COOKIE['rememberme']);
@@ -47,10 +48,10 @@
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <a id="editarPerfilButton" class="dropdown-item">
+                    <a class="dropdown-item"  onclick="showConfirmationDialog('<?php echo $userInfo['nome']; ?>', '<?php echo $userInfo['email']; ?>')">
                       editar perfil
                     </a>
-                    <a class="dropdown-item" href="/logout">
+                    <a class="dropdown-item" onclick="window.location.href='/logout'">
                       <p style="color: red; font-weight: 400;"> Logout </p>
                     </a>
                   </div>
@@ -58,15 +59,18 @@
                 <div id="editarPerfilModal" class="modal">
                   <div class="modal-background"></div>
                   <div class="modal-content">
+                    <div class="modal-close-container">
+                      <button class="modal-close is-large" aria-label="close"></button>
+                    </div>
                     <div class="columns is-vcentered is-mobile">
                       <div class="column is-one-third has-text-centered">
                         <figure class="image is-64x64 is-inline-block">
-                          <img src="<?php echo ($userInfo)? $userInfo['profile_image_url'] : '' ?>" alt="Foto de Perfil" class="is-rounded profile-modal-pic">
+                          <img src="<?php echo ($userInfo) ? $userInfo['profile_image_url'] : '' ?>" alt="Foto de Perfil" class="is-rounded profile-modal-pic">
                         </figure>
                       </div>
                       <div class="column" style="padding-bottom: 0px;">
-                        <p class="title"><?php echo ($userInfo)? $userInfo['nome'] : '' ?></p>
-                        <p class="subtitle"><?php echo ($userInfo)? $userInfo['email'] : '' ?></p>
+                        <p class="title"><?php echo ($userInfo) ? $userInfo['nome'] : '' ?></p>
+                        <p class="subtitle"><?php echo ($userInfo) ? $userInfo['email'] : '' ?></p>
 
                         <h3 style="display: flex;"><img src="/assets/icons/heart.svg"> <span>Lista de desejos</span></h3>
                         <hr>
@@ -83,7 +87,7 @@
                         </ul>
                       </div>
                     </div>
-                    <button class="modal-close is-large" aria-label="close"></button>
+
                   </div>
                 </div>
               </div>
@@ -110,17 +114,18 @@
 </header>
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-confirm@3.3.4/dist/jquery-confirm.min.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    n =0;
+    n = 0;
     const editarPerfilButton = document.getElementById('editarPerfilButton');
     const editarPerfilModal = document.getElementById('editarPerfilModal');
 
     if (editarPerfilButton && editarPerfilModal) {
       editarPerfilButton.addEventListener('click', function() {
-        
-        n+=1;
+
+        n += 1;
         console.log("Clicou - " + n);
         editarPerfilModal.classList.add('is-active');
       });
@@ -133,16 +138,48 @@
       });
     }
   });
+
+  // Função global para mostrar a caixa de diálogo de confirmação
+  function showConfirmationDialog(nome, email) {
+      $.confirm({
+        title: 'Editar Perfil',
+        content: '<h3><b>' +nome+'</b></h3>' + email,
+        buttons: {
+          confirm: {
+            text: 'Sim',
+            btnClass: 'btn-green',
+            action: function () {
+              // Código a ser executado quando o usuário confirma
+              alert('Ação confirmada!');
+            }
+          },
+          cancel: {
+            text: 'Cancelar',
+            btnClass: 'btn-red',
+            action: function () {
+              // Código a ser executado quando o usuário cancela
+              alert('Ação cancelada.');
+          }
+        }
+      }
+    });
+  }
 </script>
 
 <style>
   .modal-content {
-    background-color: white; /* Defina a cor de fundo desejada para o conteúdo do modal */
-    padding: 20px; /* Ajuste o espaçamento interno conforme necessário */
-    border-radius: 5px; /* Adicione borda arredondada ao conteúdo do modal */
+    position: relative;
+    background-color: white;
+    /* Defina a cor de fundo desejada para o conteúdo do modal */
+    padding: 20px;
+    /* Ajuste o espaçamento interno conforme necessário */
+    border-radius: 5px;
+    /* Adicione borda arredondada ao conteúdo do modal */
   }
 
-  img.is-rounded.profile-modal-pic{
+  img.is-rounded.profile-modal-pic {
     max-height: fit-content;
   }
+
+  .modal-close-container {}
 </style>

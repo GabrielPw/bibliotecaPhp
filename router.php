@@ -29,6 +29,9 @@
         case '/livro-detalhe':
             require 'view/detalheLivro.php';
             break;
+        case '/cadastrar':
+            require 'config/cadastro.php';
+            break;
         case '/login':
             require 'config/login.php';
             break;

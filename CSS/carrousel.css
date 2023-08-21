@@ -1,0 +1,60 @@
+:root {
+
+    --amarelo-background: #ffb703;
+    --azul-banner: #023047;
+}
+
+.splide__slide {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente a imagem */
+    height: 100%; /* Preenche a altura da div do carrossel */
+}
+
+.splide__slide img {
+    width: 100%;
+    object-fit: contain; /* Mantém a proporção da imagem e a exibe por inteiro */
+}
+
+.splide {
+    height: 40vh; /* Mantém a altura do carrossel */
+}
+
+.banner-carrousel {
+    background: var(--azul-banner);
+    padding: 20px;
+}
+
+.column-splide {
+    background: var(--azul-banner);
+}
+
+.splide__track--draggable {
+    height: 100%;
+}
+
+.splide__slide{
+    border-radius: 10px;
+}
+
+.splide__slide img{
+    height: 100%;
+}
+
+.text-banner{
+    color: white;
+}
+
+.splide__slide {
+    backface-visibility: hidden;
+    box-sizing: border-box;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    list-style-type: none!important;
+    margin: 0;
+    position: relative;
+}
+
+.splide__slide.splide__slide--clone.is-next img{
+    position: relative;
+    width: calc(50%);
+}

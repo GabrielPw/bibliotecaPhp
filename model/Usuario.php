@@ -143,6 +143,43 @@
                 return false;
             }
         }
+
+        function cadastrarUsuario($nome, $email, $endereco, $telefone, $senha){
+            if (!$this->conn) {
+                echo "Erro na conexão com o banco de dados.";
+                return false;
+            }
+        
+            $queryCheckEmail = 'SELECT id FROM usuarios WHERE email = :email';
+            $stmtCheckEmail = $this->conn->prepare($queryCheckEmail);
+            $stmtCheckEmail->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmtCheckEmail->execute();
+            $resultCheckEmail = $stmtCheckEmail->fetchAll();
+            
+            if ($stmtCheckEmail->rowCount() > 0) {
+                echo "Email já cadastrado.";
+                return false;
+            }
+        
+            // Insere o novo usuário no banco de dados
+            $query = 'INSERT INTO usuarios (nome, email, endereco, telefone, senha) 
+                      VALUES (:nome, :email, :endereco, :telefone, :senha)';
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmt->bindValue(':endereco', $endereco, PDO::PARAM_STR);
+            $stmt->bindValue(':telefone', $telefone, PDO::PARAM_STR);
+            $stmt->bindValue(':senha', $senha, PDO::PARAM_STR);
+            
+        
+            if ($stmt->execute()) {
+                return true; // Cadastro realizado com sucesso
+            } else {
+                echo "Erro ao cadastrar o usuário: " . $stmt->error;
+                return false;
+            }
+        }
     }
 
 ?>
